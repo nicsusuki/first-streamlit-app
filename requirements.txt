@@ -2,3 +2,6 @@ pandas
 streamlit
 plotly
 sklearn
+torch
+sentence_transformers
+tqdm
