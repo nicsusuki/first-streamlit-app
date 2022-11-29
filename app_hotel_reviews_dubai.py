@@ -25,7 +25,7 @@ queries = st.text_input("Start typing")
 # st.markdown("This is v2")
 # =============================================================================
 
-@st.cache(persist=True)
+#@st.cache(persist=True)
 
 url = 'https://raw.githubusercontent.com/nicsusuki/first-streamlit-app/main/hotelReviewsInDubai__en2019100120191005.csv'
 df = pd.read_csv(url)
