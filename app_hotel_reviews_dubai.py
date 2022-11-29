@@ -12,18 +12,17 @@ import streamlit as st
 import torch
 from sentence_transformers import SentenceTransformer, util
 from tqdm import tqdm
-
-
+import time
 
 
 st.title("Dubai Hotel Finder")
+
+#Add images
+images = ["https://whatson.ae/wp-content/uploads/2017/08/downtown-facebook.jpg"]
+st.image(images, width=600,use_column_width=True, caption=["Dubai Skyline"])
+st.markdown("This hotel finder looks at trip advisor reviews of hotels in Dubai and returns hotels with reviews similar to the search text.")
 st.subheader("Find a hotel in Dubai via review similarity")
-query = st.text_input("Start typing")
-# =============================================================================
-# st.markdown("This is a demo Streamlit app.")
-# st.markdown("My name is Hamza, hello world!..")
-# st.markdown("This is v2")
-# =============================================================================
+query = st.text_input("Type search terms here")
 
 #@st.cache(persist=True)
 
@@ -50,6 +49,7 @@ df_sentences_list = list(df_sentences.keys())
 
 df_sentences_list = [str(d) for d in tqdm(df_sentences_list)]
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
+
 # Corpus with example sentences
 corpus = df_sentences_list
 corpus_embeddings = embedder.encode(corpus,show_progress_bar=True)
@@ -65,15 +65,37 @@ query_embedding = embedder.encode(query, convert_to_tensor=True)
 cos_scores = util.pytorch_cos_sim(query_embedding, corpus_embeddings)[0]
 top_results = torch.topk(cos_scores, k=top_k)
 
-    #print("\n\n======================\n\n")
-st.success("Query: {}".format(query))
-    #print("\nTop 5 most similar sentences in corpus:")
+search_button = st.button('Search')
 
-for score, idx in zip(top_results[0], top_results[1]):
-    st.success("(Score: {:.4f})".format(score))
-    st.success(corpus[idx], "(Score: {:.4f})".format(score))
-    row_dict = df.loc[df['all_review']== corpus[idx]]
-    st.success("paper_id:  " , row_dict['hotelName'] , "\n")
+st.markdown(
+        "<hr />",
+        unsafe_allow_html=True
+    )
+
+if search_button:
+    st.markdown("**Finding hotels matching:** " + query)
+    with st.spinner("Generating results..."):
+        time.sleep(5)
+        #st.markdown('***Top 5 most similar hotels based on reviews:***')
+        if not isinstance(query, str) or not len(query) > 1:
+                         st.markdown("No search terms found.")
+        else:
+            for score, idx in zip(top_results[0], top_results[1]):
+                row_dict = df.loc[df['all_review']== corpus[idx]]
+                s = pd.Series(row_dict['hotelName'])
+                st.success(s.to_string(index=False) + "  (Score: {:.4f})".format(score))
+            st.markdown(
+                    "<hr />",
+                    unsafe_allow_html=True
+                )
+            st.markdown("**Read reviews for top matches** ")
+            for score, idx in zip(top_results[0], top_results[1]):
+                row_dict = df.loc[df['all_review']== corpus[idx]]
+                s = pd.Series(row_dict['hotelName'])
+                st.success(s.to_string(index=False) + "  (Score: {:.4f})".format(score))
+                st.markdown(corpus[idx])
+                
+                #st.success("paper_id:  " + row_dict['hotelName'] + "\n")
   
     
     
@@ -117,9 +139,7 @@ for score, idx in zip(top_results[0], top_results[1]):
 # 
 # =============================================================================
 
-    #Add images
-    #images = ["<image_url>"]
-    #st.image(images, width=600,use_container_width=True, caption=["Iris Flower"])
+    
 
 
 
