@@ -66,7 +66,7 @@ cos_scores = util.pytorch_cos_sim(query_embedding, corpus_embeddings)[0]
 top_results = torch.topk(cos_scores, k=top_k)
 
     #print("\n\n======================\n\n")
-st.success("Query:", query)
+st.success("Query: {}".format(query))
     #print("\nTop 5 most similar sentences in corpus:")
 
 for score, idx in zip(top_results[0], top_results[1]):
