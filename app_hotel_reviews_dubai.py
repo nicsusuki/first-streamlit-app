@@ -18,7 +18,7 @@ from tqdm import tqdm
 
 st.title("Dubai Hotel Finder")
 st.subheader("Find a hotel in Dubai via review similarity")
-queries = st.text_input("Start typing")
+query = st.text_input("Start typing")
 # =============================================================================
 # st.markdown("This is a demo Streamlit app.")
 # st.markdown("My name is Hamza, hello world!..")
