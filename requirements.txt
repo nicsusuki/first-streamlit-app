@@ -1,5 +1,6 @@
 pandas
 plotly
+streamlit
 sklearn
 torch
 sentence_transformers
