@@ -5,3 +5,5 @@ sklearn
 torch
 sentence_transformers
 tqdm
+wordcloud
+matplotlib
