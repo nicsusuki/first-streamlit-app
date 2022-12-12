@@ -59,15 +59,36 @@ embedder = SentenceTransformer('all-MiniLM-L6-v2')
 corpus = df_sentences_list
 # corpus_embeddings = embedder.encode(corpus,show_progress_bar=True)
 
-# open the corpus_embeddings file
-fileo = open('corpus_embeddings.pkl' , "rb")
-# loading data
-corpus_embeddings = pkl.load(fileo)
 
-# open the summary file
-fileo = open('review_summary.pkl' , "rb")
-# loading data
-summary = pkl.load(fileo)
+@st.cache
+def load_corpus_embeddings():
+    # open the get_word file
+    fileo = open('corpus_embeddings.pkl' , "rb")
+    # loading data
+    corpus_embeddings = pkl.load(fileo)
+    return corpus_embeddings
+
+corpus_embeddings = load_corpus_embeddings()
+
+@st.cache
+def load_review_summary():
+    # open the get_word file
+    fileo = open('review_summary.pkl' , "rb")
+    # loading data
+    summary = pkl.load(fileo)
+    return summary
+
+summary = load_review_summary()
+
+# # open the corpus_embeddings file
+# fileo = open('corpus_embeddings.pkl' , "rb")
+# # loading data
+# corpus_embeddings = pkl.load(fileo)
+
+# # open the summary file
+# fileo = open('review_summary.pkl' , "rb")
+# # loading data
+# summary = pkl.load(fileo)
 
 # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
 top_k = 1
